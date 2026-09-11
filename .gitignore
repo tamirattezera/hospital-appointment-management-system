@@ -1,0 +1,17 @@
+# Java compiled files
+*.class
+out/
+build/
+target/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Generated reports
+reports/*.txt
