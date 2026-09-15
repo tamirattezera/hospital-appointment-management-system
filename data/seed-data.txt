@@ -1,0 +1,5 @@
+PATIENT,P001,Abebe Kebede,0911000000,abebe@example.com
+PATIENT,P002,Hana Tesfaye,0911000001,hana@example.com
+PATIENT,P003,Dawit Alemu,0911000002,dawit@example.com
+DOCTOR,D001,Dr. Sara,0912000000,sara@example.com,CARDIOLOGY,800
+DOCTOR,D002,Dr. Daniel,0912000001,daniel@example.com,DERMATOLOGY,600

@@ -411,7 +411,184 @@ public class Main {
         }
 
         // --------------------------------------------------
-        // 11. GENERATE REPORT
+        // 11. ADDITIONAL BUSINESS RULE TESTS
+        // --------------------------------------------------
+
+        System.out.println(
+                "\n--- ADDITIONAL BUSINESS RULE TESTS ---"
+        );
+
+        // --------------------------------------------------
+        // 11.1 NULL DOCTOR
+        // --------------------------------------------------
+
+        try {
+
+            service.scheduleAppointment(
+                    patient1,
+                    null,
+                    appointmentTime2
+            );
+
+            System.out.println(
+                    "FAIL: Null doctor was accepted."
+            );
+
+        } catch (InvalidAppointmentException e) {
+
+            System.out.println(
+                    "PASS: Null doctor prevented: "
+                            + e.getMessage()
+            );
+
+        } catch (DoctorUnavailableException e) {
+
+            System.out.println(
+                    "FAIL: Unexpected doctor conflict: "
+                            + e.getMessage()
+            );
+        }
+
+        // --------------------------------------------------
+        // 11.2 NULL DATE/TIME
+        // --------------------------------------------------
+
+        try {
+
+            service.scheduleAppointment(
+                    patient1,
+                    doctor1,
+                    null
+            );
+
+            System.out.println(
+                    "FAIL: Null date/time was accepted."
+            );
+
+        } catch (InvalidAppointmentException e) {
+
+            System.out.println(
+                    "PASS: Null date/time prevented: "
+                            + e.getMessage()
+            );
+
+        } catch (DoctorUnavailableException e) {
+
+            System.out.println(
+                    "FAIL: Unexpected doctor conflict: "
+                            + e.getMessage()
+            );
+        }
+
+        // --------------------------------------------------
+        // 11.3 MISSING APPOINTMENT ID
+        // --------------------------------------------------
+
+        try {
+
+            service.completeAppointment("A999");
+
+            System.out.println(
+                    "FAIL: Missing appointment was accepted."
+            );
+
+        } catch (InvalidAppointmentException e) {
+
+            System.out.println(
+                    "PASS: Missing appointment prevented: "
+                            + e.getMessage()
+            );
+        }
+
+        // --------------------------------------------------
+        // 11.4 CANCELLED SLOT CAN BE REUSED
+        // --------------------------------------------------
+
+        if (appointment3 != null) {
+
+            try {
+
+                Appointment replacementAppointment =
+                        service.scheduleAppointment(
+                                patient3,
+                                doctor1,
+                                appointmentDate,
+                                secondTime
+                        );
+
+                System.out.println(
+                        "PASS: Cancelled doctor's slot was reused: "
+                                + replacementAppointment
+                );
+
+            } catch (InvalidAppointmentException e) {
+
+                System.out.println(
+                        "FAIL: Cancelled slot could not be reused: "
+                                + e.getMessage()
+                );
+
+            } catch (DoctorUnavailableException e) {
+
+                System.out.println(
+                        "FAIL: Cancelled slot still appears occupied: "
+                                + e.getMessage()
+                );
+            }
+        }
+
+        // --------------------------------------------------
+        // 11.5 SCHEDULED SLOT REMAINS BLOCKED
+        // --------------------------------------------------
+
+        try {
+
+            service.scheduleAppointment(
+                    patient1,
+                    doctor2,
+                    appointmentTime1
+            );
+
+            System.out.println(
+                    "FAIL: Scheduled doctor's slot was reused."
+            );
+
+        } catch (DoctorUnavailableException e) {
+
+            System.out.println(
+                    "PASS: Scheduled doctor's slot remains blocked: "
+                            + e.getMessage()
+            );
+
+        } catch (InvalidAppointmentException e) {
+
+            System.out.println(
+                    "FAIL: Unexpected invalid appointment: "
+                            + e.getMessage()
+            );
+        }
+
+        // --------------------------------------------------
+        // 11.6 COLLECTION PROTECTION
+        // --------------------------------------------------
+
+        try {
+
+            service.getAppointments().clear();
+
+            System.out.println(
+                    "FAIL: Internal appointment collection was exposed."
+            );
+
+        } catch (UnsupportedOperationException e) {
+
+            System.out.println(
+                    "PASS: Appointment collection is protected."
+            );
+        }
+
+        // --------------------------------------------------
+        // 12. GENERATE REPORT
         // --------------------------------------------------
 
         System.out.println(
@@ -424,7 +601,7 @@ public class Main {
         System.out.println(report);
 
         // --------------------------------------------------
-        // 12. WRITE REPORT TO FILE
+        // 13. WRITE REPORT TO FILE
         // --------------------------------------------------
 
         try {
@@ -602,4 +779,3 @@ public class Main {
         }
     }
 }
-
